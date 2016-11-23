@@ -1,0 +1,11 @@
+name: LongTimeNoSee
+author: toyblocks
+version: ${project.version}
+main: jp.llv.ltns.LongTimeNoSeeBukkit
+
+commands:
+  seen:
+    description: show join/quit timing information
+    usage: /<command> <player>
+    permission: longtimenosee.command
+    aliases: [nosee, ltns]

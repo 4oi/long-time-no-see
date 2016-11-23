@@ -1,0 +1,4 @@
+name: LongTimeNoSee
+author: toyblocks
+version: ${project.version}
+main: jp.llv.ltns.LongTimeNoSeeBungee

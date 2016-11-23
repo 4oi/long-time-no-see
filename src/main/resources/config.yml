@@ -1,0 +1,142 @@
+###################################################
+##   Long Time No See plugin by toyblocks(aoy)   ##
+###################################################
+
+##                   Variables                   ##
+#                                                 #
+# $now            current time                    #
+# $onlinecount    count of online players         #
+# $offlinecount   count of total joined players   #
+# $first-join     first time the player joined    #
+# $played         period since $first-join        #
+# $count          times the player joined         #
+# $total-online   total online period             #
+# $average-online $total-online / $count          #
+# $last-join      last time the player joined     #
+# $online         period since $last-join         #
+# $last-quit      last time the player quit       #
+# $last-online    last time the player was online #
+# $interval       period since $last-quit         #
+# $offline        period since $last-online       #
+# $player         the name of the player          #
+#                                                 #
+###################################################
+
+join:
+    message: >
+     [
+     {"text":"Welcome, "},
+     {"text":"$player","color":"green"},
+     {"text":"! It's "},
+     {"text":"$now","color":"aqua"},
+     {"text":" now, and you has been offline for "},
+     {"text":"$interval","color":"aqua"},
+     {"text":" since "},
+     {"text":"$last-quit","color":"aqua"},
+     {"text":".\nThis is "},
+     {"text":"$count","color":"aqua"},
+     {"text":"th time you've joined. You had currently played for "},
+     {"text":"$total-online","color":"aqua"},
+     {"text":"."}
+     ]
+    broadcast: >
+     [
+     {"text":"$player","color":"green"},
+     {"text":" has joined! (last quit: "},
+     {"text":"$last-quit","color":"aqua"},
+     {"text":", total-online: "},
+     {"text":"$total-online","color":"aqua"},
+     {"text":")"}
+     ]
+     
+    # ONLY FOR BUKKIT
+    override: true
+
+firstjoin:
+    message: >
+     [
+     {"text":"Welcome, "},
+     {"text":"$player","color":"green"},
+     {"text":"! It's "},
+     {"text":"$now","color":"aqua"},
+     {"text":" now, and you has been offline for "},
+     {"text":"$interval","color":"aqua"},
+     {"text":" since "},
+     {"text":"$last-quit","color":"aqua"},
+     {"text":".\nThis is "},
+     {"text":"$count","color":"aqua"},
+     {"text":"th time you've joined. You had currently played for "},
+     {"text":"$total-online","color":"aqua"},
+     {"text":"."}
+     ]
+    broadcast: >
+     [
+     {"text":"$player","color":"green"},
+     {"text":" has joined! (last quit: "},
+     {"text":"$last-quit","color":"aqua"},
+     {"text":", total-online: "},
+     {"text":"$total-online","color":"aqua"},
+     {"text":")"}
+     ]
+     
+    # ONLY FOR BUKKIT
+    override: true
+
+quit:
+    broadcast: >
+     [
+     {"text":"$player","color":"green"},
+     {"text":" has quit, played for "},
+     {"text":"$online","color":"aqua"},
+     {"text":"."}
+     ]
+    # ONLY FOR BUKKIT
+    override: true
+
+
+command:
+    message: >
+     [
+     {"text":"Player : ","color":"green"},
+     {"text":"$player","color":"gold"},
+     {"text":"\n"},
+     {"text":"Now : ","color":"green"},
+     {"text":"$now","color":"aqua"},
+     {"text":"\n"},
+     {"text":"First join : ","color":"green"},
+     {"text":"$first-join","color":"aqua"},
+     {"text":" (","color":"green"},
+     {"text":"$played","color":"aqua"},
+     {"text":" ago)\nCount : ","color":"green"},
+     {"text":"$count","color":"aqua"},
+     {"text":"\n"},
+     {"text":"Total online : ","color":"green"},
+     {"text":"$total-online","color":"aqua"},
+     {"text":" (avg: ","color":"green"},
+     {"text":"$average-online","color":"aqua"},
+     {"text":")\nLast join : ","color":"green"},
+     {"text":"$last-join","color":"aqua"},
+     {"text":" (","color":"green"},
+     {"text":"$online","color":"aqua"},
+     {"text":" ago)\nLast quit : ","color":"green"},
+     {"text":"$last-quit","color":"aqua"},
+     {"text":" (","color":"green"},
+     {"text":"$interval","color":"aqua"},
+     {"text":" ago)\nLast online : ","color":"green"},
+     {"text":"$last-online","color":"aqua"},
+     {"text":" (","color":"green"},
+     {"text":"$offline","color":"aqua"},
+     {"text":" ago)","color":"green"}
+     ]
+
+# ONLY FOR BUKKIT
+import: true
+
+date:
+    format: 'yyyy/MM/dd H:mm'
+    now: 'now'
+    na: 'N/A'
+period:
+    format: 'D{days }H{hours }M{minutes }S{seconds}'
+    now: 'a moment'
+    na: 'N/A'
