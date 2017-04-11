@@ -23,16 +23,14 @@
  */
 package com.github.kory33.mojangapi;
 
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-import org.json.JSONObject;
-
-
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * Wrapper util class for making requests to Mojang API
@@ -58,16 +56,8 @@ public class MojangAPI {
             int responseCode = connection.getResponseCode();
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                // construct response text
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder builder = new StringBuilder();
-                String line;
-                while((line = reader.readLine()) != null) {
-                    builder.append(line);
-                }
-
-                JSONObject responseJson = new JSONObject(builder.toString());
-                return convertRawHexDataToUUID(responseJson.getString("id"));
+                JsonObject json = (new JsonParser()).parse(new InputStreamReader(connection.getInputStream())).getAsJsonObject();
+                return convertRawHexDataToUUID(json.get("id").getAsString());
             }
             
             return null;
