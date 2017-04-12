@@ -16,7 +16,6 @@
  */
 package jp.llv.ltns;
 
-import com.google.common.io.ByteStreams;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,6 +24,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.logging.Level;
+
+import com.github.kory33.mojangapi.MojangAPI;
+import com.google.common.io.ByteStreams;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -115,6 +118,14 @@ public class LongTimeNoSeeBungee extends Plugin implements Listener {
         this.manager.uncacheAll();
     }
 
+    private void sendTimingRecordData(CommandSender target, TimingRecord record, String playerName) {
+        try {
+            target.sendMessage(this.manager.format(this.config.commandMessage, playerName, record, this.getProxy().getPlayers().size()));
+        } catch (RuntimeException ex) {
+            this.getLogger().log(Level.WARNING, "Failed to load a message. Is the message valid?", ex);
+        }
+    }
+    
     public void execute(CommandSender sender, String[] args) {
         ProxiedPlayer player;
         if (args.length < 1 && sender instanceof ProxiedPlayer) {
@@ -126,17 +137,29 @@ public class LongTimeNoSeeBungee extends Plugin implements Listener {
             player = this.getProxy().getPlayer(args[0]);
         }
 
-        if (player == null) {
-            sender.sendMessage(new ComponentBuilder("The player is not online.").color(ChatColor.RED).create());
+        if (player != null) {
+            TimingRecord record = this.manager.getRecord(player.getUniqueId());
+            this.sendTimingRecordData(sender, record, player.getName());
             return;
         }
 
-        TimingRecord record = this.manager.getRecord(player.getUniqueId());
-        try {
-            sender.sendMessage(this.manager.format(this.config.commandMessage, player.getName(), record, this.getProxy().getPlayers().size()));
-        } catch (RuntimeException ex) {
-            this.getLogger().log(Level.WARNING, "Failed to load a message. Is the message valid?", ex);
-        }
+        String playerName = args[0];
+        MojangAPI.asyncGetUUIDFromUsername(playerName)
+            .thenAccept((uuid) -> {
+                if (uuid == null) {
+                    sender.sendMessage(new ComponentBuilder("The player is not found.").color(ChatColor.RED).create());
+                    return;
+                }
+                TimingRecord record = this.manager.getRecord(uuid);
+                
+                if (record.isFirsttime()) {
+                    sender.sendMessage(new ComponentBuilder("The player has not played before").color(ChatColor.RED).create());
+                    return;
+                }
+                
+                this.sendTimingRecordData(sender, record, playerName);
+                return;
+            });
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
