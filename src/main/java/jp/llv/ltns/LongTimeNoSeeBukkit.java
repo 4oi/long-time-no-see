@@ -128,10 +128,10 @@ public class LongTimeNoSeeBukkit extends JavaPlugin implements Listener {
 
         if (player == null) {
             player = this.getServer().getOfflinePlayer(args[0]);
-            if (!player.hasPlayedBefore()) {
-                sender.sendMessage(ChatColor.RED + "The player has not played before");
-                return true;
-            }
+            //if (!player.hasPlayedBefore()) {
+            //    sender.sendMessage(ChatColor.RED + "The player has not played before");
+            //    return true;
+            //}
         }
         TimingRecord record = this.manager.getRecord(player.getUniqueId());
 
